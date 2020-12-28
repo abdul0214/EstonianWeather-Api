@@ -2,6 +2,7 @@ package com.estonia.weatherservice.forecast.application.service;
 
 import com.estonia.weatherservice.forecast.domain.model.Forecast;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,20 @@ import java.util.stream.Collectors;
 @Service
 public class WeatherDataUpdateService {
 
+    @Autowired
+    ForecastService forecastService;
 
     @Value("${weatherDataURL}")
     private String weatherDataURL;
+
+    @Value("${userAgent}")
+    private String userAgent;
+
+    @Value("${userAgentBrowser}")
+    private String userAgentBrowser;
+
+    @Value("${encodingStandard}")
+    private String encodingStandard;
 
 
     /**
@@ -52,10 +64,7 @@ public class WeatherDataUpdateService {
             XmlMapper xmlMapper = new XmlMapper();
             Forecast[] forecasts
                     = xmlMapper.readValue(xmlString, Forecast[].class);
-
-            for (Forecast forecast : forecasts) {
-                System.out.println(forecast);
-            }
+            forecastService.createForecasts(forecasts);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,9 +83,8 @@ public class WeatherDataUpdateService {
     public String fetchXMLExchangeRateData(String xmlURL) throws Exception {
         URL url = new URL(xmlURL);
         URLConnection yc = url.openConnection();
-        yc.setRequestProperty("User-Agent",
-                "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-        BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream(), "ISO8859-4"));
+        yc.setRequestProperty(userAgent, userAgentBrowser);
+        BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream(), encodingStandard));
         String xmlString = in.lines().collect(Collectors.joining());
         in.close();
         return xmlString;
