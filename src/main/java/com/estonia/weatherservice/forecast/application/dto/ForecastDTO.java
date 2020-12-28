@@ -1,7 +1,5 @@
 package com.estonia.weatherservice.forecast.application.dto;
 
-import com.estonia.weatherservice.forecast.domain.model.Day;
-import com.estonia.weatherservice.forecast.domain.model.Night;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -16,9 +14,9 @@ import org.springframework.hateoas.RepresentationModel;
 @Data
 public class ForecastDTO extends RepresentationModel<ForecastDTO> {
 
-    Day day;
+    String day;
 
-    Night night;
+    String night;
 
     String date;
 }

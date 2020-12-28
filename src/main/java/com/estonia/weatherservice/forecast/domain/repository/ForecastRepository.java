@@ -26,4 +26,8 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long> {
      */
     Forecast findByDate(String date);
 
+    boolean existsForecastByDate(String date);
+
+    Long deleteByDate(String date);
+
 }

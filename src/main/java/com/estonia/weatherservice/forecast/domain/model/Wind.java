@@ -20,6 +20,4 @@ public class Wind {
     private String speedmin;
     private String speedmax;
     private String gust;
-
-
 }

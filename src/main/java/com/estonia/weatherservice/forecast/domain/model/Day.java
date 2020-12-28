@@ -15,8 +15,6 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-@Entity
-@Table(name = "day")
 @Data
 public class Day {
 
@@ -64,5 +62,9 @@ public class Day {
         }
         places.add(place);
     }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "forecast_id", referencedColumnName = "id")
+    private Forecast forecast;
 
 }

@@ -15,9 +15,7 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-@Entity
 @Data
-@Table(name = "night")
 public class Night {
 
     @Id
@@ -48,10 +46,14 @@ public class Night {
     private List<PlaceNight> places;
 
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "forecast_id", referencedColumnName = "id")
+    private Forecast forecast;
+
     @JsonSetter("wind")
     public void setWinds(Wind wind) {
         if (this.winds == null) {
-            this.winds = new ArrayList<Wind>();
+            this.winds = new ArrayList<>();
         }
         winds.add(wind);
     }
@@ -59,8 +61,10 @@ public class Night {
     @JsonSetter("place")
     public void setPlaces(PlaceNight place) {
         if (this.places == null) {
-            this.places = new ArrayList<PlaceNight>();
+            this.places = new ArrayList<>();
         }
         places.add(place);
     }
+
+
 }
