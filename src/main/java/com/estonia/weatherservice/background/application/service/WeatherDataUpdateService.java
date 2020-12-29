@@ -1,5 +1,6 @@
-package com.estonia.weatherservice.forecast.application.service;
+package com.estonia.weatherservice.background.application.service;
 
+import com.estonia.weatherservice.forecast.application.service.ForecastService;
 import com.estonia.weatherservice.forecast.domain.model.Forecast;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -24,20 +25,20 @@ import java.util.stream.Collectors;
 @Service
 public class WeatherDataUpdateService {
 
+    private final String updateSchedule = "0 0 0 1 * *";
+    private final String zone = "Europe/Tallinn";
+
     @Autowired
     ForecastService forecastService;
-
     @Value("${weatherDataURL}")
     private String weatherDataURL;
-
     @Value("${userAgent}")
     private String userAgent;
-
     @Value("${userAgentBrowser}")
     private String userAgentBrowser;
-
     @Value("${encodingStandard}")
     private String encodingStandard;
+
 
 
     /**
@@ -50,21 +51,22 @@ public class WeatherDataUpdateService {
      * Following Encoding for XML Datta : ISO 8859-4
      * according to: https://en.wikipedia.org/wiki/Character_encoding
      * cron based scheduler
-     * for updating at 00:00 hours Eastern European Time(EET)
+     * for updating at 00:01 hours Eastern European Time(EET)
      * fixedRate based is  only for demo purposes
      *
      * @author Abdul Wahab
      * @since 1.0
      */
-//    @Scheduled(cron = "0 0 0 * * *",zone = "Europe/Tallinn")
-    @Scheduled(fixedRate = 3600 * 24 * 1000)
-    public void updateExchangeRate() throws IOException {
+//    @Scheduled(cron = updateSchedule,zone = zone)
+    @Scheduled(fixedRate = 864000000)
+    public void updateWeatherData()  {
         try {
-            String xmlString = fetchXMLExchangeRateData(weatherDataURL);
+            String xmlString = fetchXMLWeatherData(weatherDataURL);
             XmlMapper xmlMapper = new XmlMapper();
             Forecast[] forecasts
                     = xmlMapper.readValue(xmlString, Forecast[].class);
             forecastService.createForecasts(forecasts);
+            System.out.println(Arrays.asList(forecasts));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,7 +82,7 @@ public class WeatherDataUpdateService {
      * @return {@link String}
      * @since 1.0
      */
-    public String fetchXMLExchangeRateData(String xmlURL) throws Exception {
+    public String fetchXMLWeatherData(String xmlURL) throws Exception {
         URL url = new URL(xmlURL);
         URLConnection yc = url.openConnection();
         yc.setRequestProperty(userAgent, userAgentBrowser);
