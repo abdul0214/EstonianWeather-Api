@@ -1,6 +1,8 @@
 package com.estonia.weatherservice.forecast.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,7 +23,7 @@ public class Forecast {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String date;
 
 
@@ -32,14 +34,18 @@ public class Forecast {
     private String night;
 
     @JsonSetter("day")
-    public void setDayData(Day value) {
-        this.day = value.toString();
+    public void setDayData(Day value) throws JsonProcessingException {
+        this.day = new ObjectMapper().writeValueAsString(value);
+
     }
 
     @JsonSetter("night")
-    public void setNightData(Night value) {
-        this.night = value.toString();
+    public void setNightData(Night value) throws JsonProcessingException {
+        this.night = new ObjectMapper().writeValueAsString(value);
     }
+
+
+
 
 
 }

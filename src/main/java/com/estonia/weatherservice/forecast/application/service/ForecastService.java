@@ -4,6 +4,7 @@ import com.estonia.weatherservice.forecast.application.dto.ForecastDTO;
 import com.estonia.weatherservice.forecast.domain.model.Forecast;
 import com.estonia.weatherservice.forecast.domain.repository.ForecastRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public class ForecastService {
     @Autowired
     private ForecastAssembler forecastAssembler;
 
+    @Value("${dateformat}")
+    private String dateformat;
+
 
     /**
      * this is the method for creating
@@ -30,7 +34,7 @@ public class ForecastService {
      * @since 1.0
      */
     public void createForecasts(Forecast[] forecasts) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateformat);
         String dateTomorrow = dtf.format(LocalDateTime.now().plusDays(1));
         if (forecastRepository.existsForecastByDate(dateTomorrow)) {
             forecastRepository.deleteByDate(dateTomorrow);
@@ -48,15 +52,8 @@ public class ForecastService {
     public List<ForecastDTO> getAllForecasts() throws Exception {
 
         List<Forecast> forecasts = forecastRepository.findAll();
-        if (forecasts.isEmpty()) {
-            return null;
-        } else {
-            try {
-                return forecasts.stream().map(forecast -> forecastAssembler.toModel(forecast)).collect(Collectors.toList());
-            } catch (Exception e) {
-                throw new Exception("Something Went Wrong, try again later");
-            }
-        }
+        return forecasts.stream().map(forecast -> forecastAssembler.toModel(forecast)).collect(Collectors.toList());
+
     }
 
     /**
