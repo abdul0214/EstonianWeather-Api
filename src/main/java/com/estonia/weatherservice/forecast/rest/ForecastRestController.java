@@ -22,7 +22,7 @@ import java.util.List;
  * @since 1.0
  */
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "https://awayoffice.web.app"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://estonianweather.web.app"})
 @RequestMapping("/api/estonian")
 public class ForecastRestController {
 
