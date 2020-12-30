@@ -57,8 +57,8 @@ public class WeatherDataUpdateService {
      * @author Abdul Wahab
      * @since 1.0
      */
-//    @Scheduled(cron = updateSchedule,zone = zone)
-    @Scheduled(fixedRate = 864000000)
+//    @Scheduled(cron = updateSchedule,zone = zone)//actual scheduler for production
+    @Scheduled(fixedRate = 10800000)//every six hours for demo
     public void updateWeatherData()  {
         try {
             String xmlString = fetchXMLWeatherData(weatherDataURL);

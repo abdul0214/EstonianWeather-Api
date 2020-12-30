@@ -34,12 +34,12 @@ public class ForecastService {
      * @since 1.0
      */
     public void createForecasts(Forecast[] forecasts) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateformat);
-        String dateTomorrow = dtf.format(LocalDateTime.now().plusDays(1));
-        if (forecastRepository.existsForecastByDate(dateTomorrow)) {
-            forecastRepository.deleteByDate(dateTomorrow);
+        List<Forecast> forecastList = Arrays.asList(forecasts);
+        for (Forecast forecast : forecastList)
+        {
+            deleteForecastByDate(forecast.getDate());
         }
-        forecastRepository.saveAll(Arrays.asList(forecasts));
+        forecastRepository.saveAll(forecastList);
     }
 
     /**
@@ -86,10 +86,10 @@ public class ForecastService {
      */
     public ForecastDTO deleteForecastByDate(String date) {
         Forecast forecast = forecastRepository.findByDate(date);
-        if (forecast != null) {
+        if (forecast == null) {
             return null;
         } else {
-            forecastRepository.deleteByDate(date);
+            forecastRepository.deleteById(forecast.getId());
             return forecastAssembler.toModel(forecast);
         }
     }

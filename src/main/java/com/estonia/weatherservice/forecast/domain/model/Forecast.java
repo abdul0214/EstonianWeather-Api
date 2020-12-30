@@ -23,9 +23,8 @@ public class Forecast {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String date;
-
 
     @Column(length = 100000)
     private String day;

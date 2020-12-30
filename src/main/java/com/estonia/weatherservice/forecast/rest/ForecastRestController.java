@@ -60,4 +60,14 @@ public class ForecastRestController {
             return new ResponseEntity<>(forecast, HttpStatus.OK);
         }
     }
+
+    @DeleteMapping("/forecast/{date}")
+    public ResponseEntity<ForecastDTO> deleteForecastByDate(@PathVariable("date") String date) {
+        ForecastDTO forecast = forecastService.deleteForecastByDate(date);
+        if (forecast == null) {
+            throw new ResourceNotFoundException("No Forecast Found by date: " + date);
+        } else {
+            return new ResponseEntity<>(forecast, HttpStatus.OK);
+        }
+    }
 }
