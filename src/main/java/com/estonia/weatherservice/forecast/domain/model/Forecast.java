@@ -15,7 +15,6 @@ import javax.persistence.*;
  * @since 1.0
  */
 @Entity
-@Table(name = "Forecasts")
 @Data
 public class Forecast {
 

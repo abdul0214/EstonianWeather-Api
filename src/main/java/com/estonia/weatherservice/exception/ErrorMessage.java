@@ -1,40 +1,32 @@
 package com.estonia.weatherservice.exception;
 
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.time.ZonedDateTime;
-
+/**
+ * represents an error message
+ *
+ * @author Abdul Wahab
+ * @version 1.0
+ * @since 2.0
+ */
+@Data
 public class ErrorMessage {
-    public String message;
-    private final Throwable throwable;
     private final HttpStatus httpStatus;
-    private final ZonedDateTime timestamp;
+    private final String timestamp;
     private final String description;
+    public String message;
 
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
+    /**
+     * this method constructs an error
+     *
+     * @param throwable - Not utilised for now will be used later for server side logging
+     * @return ErrorMessage - ErrorMessage customized to parameters
+     * @author Abdul Wahab
+     * @since 1.0
+     */
+    public ErrorMessage(String message, Throwable throwable, HttpStatus httpStatus, String timestamp, String description) {
         this.message = message;
-    }
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
-
-    public ZonedDateTime getTimestamp() {
-        return timestamp;
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public ErrorMessage(String message, Throwable throwable, HttpStatus httpStatus, ZonedDateTime timestamp, String description) {
-        this.message = message;
-        this.throwable = throwable;
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
         this.description = description;
